@@ -1,30 +1,18 @@
 openapi: 3.0.3
 info:
-  title: OpenAPI schema for template walrus-template-template
+  title: OpenAPI schema for template terraform-aws-msk-kafka
 components:
   schemas:
     variables:
       type: object
+      required:
+      - infrastructure
       properties:
         context:
           title: Context
           type: object
           description: |
             Receive contextual information. When Walrus deploys, Walrus will inject specific contextual information into this field.
-
-            Examples:
-            ```
-            context:
-              project:
-                name: string
-                id: string
-              environment:
-                name: string
-                id: string
-              resource:
-                name: string
-                id: string
-            ```
           default: {}
           nullable: true
           additionalProperties:
@@ -36,6 +24,145 @@ components:
             group: Basic
             hidden: true
             order: 1
+        infrastructure:
+          title: Infrastructure
+          type: object
+          description: |
+            Specify the infrastructure information for deploying.
+          required:
+          - vpc_id
+          properties:
+            kms_key_id:
+              nullable: true
+              title: Kms Key Id
+              type: string
+              x-walrus-ui:
+                order: 2
+            vpc_id:
+              title: Vpc Id
+              type: string
+              x-walrus-ui:
+                order: 1
+          x-walrus-ui:
+            colSpan: 12
+            group: Basic
+            order: 2
+        broker_per_zone:
+          title: Broker Per Zone
+          type: number
+          description: |
+            The desired number of broker nodes per zone in the kafka cluster.
+          default: 1
+          nullable: true
+          x-walrus-ui:
+            group: Basic
+            order: 3
+        engine_version:
+          title: Engine Version
+          type: string
+          description: |
+            Specify the deployment engine version, select from https://docs.aws.amazon.com/msk/latest/developerguide/supported-kafka-versions.html.
+          default: 3.6.0
+          nullable: true
+          x-walrus-ui:
+            group: Basic
+            order: 4
+        engine_parameters:
+          title: Engine Parameters
+          type: array
+          description: |
+            Specify the deployment engine parameters, select for https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Appendix.MySQL.Parameters.html.
+          default: []
+          items:
+            properties:
+              name:
+                title: Name
+                type: string
+                x-walrus-ui:
+                  order: 1
+              value:
+                title: Value
+                type: string
+                x-walrus-ui:
+                  order: 2
+            required:
+            - name
+            - value
+            type: object
+            x-walrus-ui:
+              colSpan: 12
+          nullable: true
+          x-walrus-ui:
+            colSpan: 12
+            group: Basic
+            order: 5
+        sasl_authentication:
+          title: Sasl Authentication
+          type: object
+          description: |
+            Specify the SASL authentication information for the Kafka service.
+          nullable: true
+          properties:
+            iam:
+              default: false
+              nullable: true
+              title: Iam
+              type: boolean
+              x-walrus-ui:
+                order: 2
+            scram:
+              default: false
+              nullable: true
+              title: Scram
+              type: boolean
+              x-walrus-ui:
+                order: 1
+          x-walrus-ui:
+            colSpan: 12
+            group: Basic
+            order: 6
+        resources:
+          title: Resources
+          type: object
+          description: |
+            Specify the computing resources.
+
+            Examples:
+            ```
+            resources:
+              class: string, optional         # https://aws.amazon.com/msk/pricing/
+            ```
+          nullable: true
+          properties:
+            class:
+              default: kafka.t3.small
+              nullable: true
+              title: Class
+              type: string
+              x-walrus-ui:
+                order: 1
+          x-walrus-ui:
+            colSpan: 12
+            group: Basic
+            order: 7
+        storage:
+          title: Storage
+          type: object
+          description: |
+            Specify the storage resources.
+          nullable: true
+          properties:
+            size:
+              default: 20480
+              nullable: true
+              title: Size
+              type: number
+              x-walrus-ui:
+                order: 1
+          x-walrus-ui:
+            colSpan: 12
+            group: Basic
+            order: 8
       x-walrus-ui:
         groupOrder:
         - Basic

@@ -1,42 +1,56 @@
-#
-# Contextual output
-#
+locals {
+  port = 9094
 
-output "walrus_project_name" {
-  value       = try(local.context["project"]["name"], null)
-  description = "The name of project where deployed in Walrus."
+  hosts = flatten([
+    [for addr in split(",", aws_msk_cluster.default.bootstrap_brokers_tls) : split(":", addr)[0]]
+  ])
+
+
+  endpoints = [
+    for c in local.hosts : format("%s:%d", c, local.port)
+  ]
 }
 
-output "walrus_project_id" {
-  value       = try(local.context["project"]["id"], null)
-  description = "The id of project where deployed in Walrus."
+output "context" {
+  description = "The input context, a map, which is used for orchestration."
+  value       = var.context
 }
 
-output "walrus_environment_name" {
-  value       = try(local.context["environment"]["name"], null)
-  description = "The name of environment where deployed in Walrus."
-}
-
-output "walrus_environment_id" {
-  value       = try(local.context["environment"]["id"], null)
-  description = "The id of environment where deployed in Walrus."
-}
-
-output "walrus_resource_name" {
-  value       = try(local.context["resource"]["name"], null)
-  description = "The name of resource where deployed in Walrus."
-}
-
-output "walrus_resource_id" {
-  value       = try(local.context["resource"]["id"], null)
-  description = "The id of resource where deployed in Walrus."
+output "refer" {
+  description = "The refer, a map, including hosts, ports and account, which is used for dependencies or collaborations."
+  sensitive   = true
+  value = {
+    schema = "aws:msk:kafka"
+    params = {
+      selector  = local.tags
+      hosts     = local.hosts
+      port      = local.port
+      endpoints = local.endpoints
+    }
+  }
 }
 
 #
-# Submodule output
+# Reference
 #
 
-output "submodule" {
-  value       = module.submodule.message
-  description = "The message from submodule."
+output "connection" {
+  description = "The connection, a string combined host and port, might be a comma separated string or a single string."
+  value       = join(",", local.endpoints)
+}
+
+output "address" {
+  description = "The address, a string only has host, might be a comma separated string or a single string."
+  value       = join(",", local.hosts)
+}
+
+output "port" {
+  description = "The port of the service."
+  value       = local.port
+}
+## UI display
+
+output "endpoints" {
+  description = "The endpoints, a list of string combined host and port."
+  value       = local.endpoints
 }
