@@ -33,12 +33,16 @@ components:
           - vpc_id
           properties:
             kms_key_id:
+              description: |
+                The KMS key id for the kafka cluster.
               nullable: true
               title: Kms Key Id
               type: string
               x-walrus-ui:
                 order: 2
             vpc_id:
+              description: |
+                The VPC ID for the kafka cluster.
               title: Vpc Id
               type: string
               x-walrus-ui:
@@ -71,7 +75,7 @@ components:
           title: Engine Parameters
           type: array
           description: |
-            Specify the deployment engine parameters, select for https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Appendix.MySQL.Parameters.html.
+            Specify the deployment engine parameters, select for https://docs.aws.amazon.com/msk/latest/developerguide/msk-configuration-properties.html.
           default: []
           items:
             properties:
@@ -105,6 +109,8 @@ components:
           properties:
             iam:
               default: false
+              description: |
+                Enable IAM authentication for the kafka cluster.
               nullable: true
               title: Iam
               type: boolean
@@ -112,6 +118,8 @@ components:
                 order: 2
             scram:
               default: false
+              description: |
+                Enable SCRAM authentication for the kafka cluster.
               nullable: true
               title: Scram
               type: boolean
@@ -126,16 +134,12 @@ components:
           type: object
           description: |
             Specify the computing resources.
-
-            Examples:
-            ```
-            resources:
-              class: string, optional         # https://aws.amazon.com/msk/pricing/
-            ```
           nullable: true
           properties:
             class:
               default: kafka.t3.small
+              description: |
+                The kafka broker instance type. See https://aws.amazon.com/msk/pricing/
               nullable: true
               title: Class
               type: string
@@ -154,6 +158,8 @@ components:
           properties:
             size:
               default: 20480
+              description: |
+                The size of the kafka broker storage in MB.
               nullable: true
               title: Size
               type: number
