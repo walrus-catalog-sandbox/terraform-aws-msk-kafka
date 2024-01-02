@@ -87,7 +87,3 @@ output "address" {
 output "port" {
   value = module.this.port
 }
-
-output "endpoints" {
-  value = module.this.endpoints
-}

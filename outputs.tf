@@ -48,9 +48,3 @@ output "port" {
   description = "The port of the service."
   value       = local.port
 }
-## UI display
-
-output "endpoints" {
-  description = "The endpoints, a list of string combined host and port."
-  value       = local.endpoints
-}
