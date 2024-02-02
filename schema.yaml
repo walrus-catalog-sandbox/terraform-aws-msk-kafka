@@ -19,7 +19,6 @@ components:
             kms_key_id:
               description: |
                 The KMS key id for the kafka cluster.
-              nullable: true
               title: Kms Key Id
               type: string
               x-walrus-ui:
@@ -41,7 +40,6 @@ components:
           description: |
             The desired number of broker nodes per zone in the kafka cluster.
           default: 1
-          nullable: true
           x-walrus-ui:
             group: Basic
             order: 3
@@ -51,7 +49,6 @@ components:
           description: |
             Specify the deployment engine version, select from https://docs.aws.amazon.com/msk/latest/developerguide/supported-kafka-versions.html.
           default: 3.6.0
-          nullable: true
           x-walrus-ui:
             group: Basic
             order: 4
@@ -79,7 +76,6 @@ components:
             type: object
             x-walrus-ui:
               colSpan: 12
-          nullable: true
           x-walrus-ui:
             colSpan: 12
             group: Basic
@@ -89,13 +85,14 @@ components:
           type: object
           description: |
             Specify the SASL authentication information for the Kafka service.
-          nullable: true
+          default:
+            iam: false
+            scram: false
           properties:
             iam:
               default: false
               description: |
                 Enable IAM authentication for the kafka cluster.
-              nullable: true
               title: Iam
               type: boolean
               x-walrus-ui:
@@ -104,7 +101,6 @@ components:
               default: false
               description: |
                 Enable SCRAM authentication for the kafka cluster.
-              nullable: true
               title: Scram
               type: boolean
               x-walrus-ui:
@@ -118,13 +114,13 @@ components:
           type: object
           description: |
             Specify the computing resources.
-          nullable: true
+          default:
+            class: kafka.t3.small
           properties:
             class:
               default: kafka.t3.small
               description: |
                 The kafka broker instance type. See https://aws.amazon.com/msk/pricing/
-              nullable: true
               title: Class
               type: string
               x-walrus-ui:
@@ -138,13 +134,13 @@ components:
           type: object
           description: |
             Specify the storage resources.
-          nullable: true
+          default:
+            size: 20480
           properties:
             size:
               default: 20480
               description: |
                 The size of the kafka broker storage in MB.
-              nullable: true
               title: Size
               type: number
               x-walrus-ui:
